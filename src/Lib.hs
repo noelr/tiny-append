@@ -13,7 +13,9 @@ db = "log" </> "log"
 go :: IO ()
 go = scotty 4002 $ do
   middleware logStdoutDev
-  get "/" $ file db
+  get "/" $ do
+    setHeader "cache-control" "no-cache"
+    file db
   post "/append" $ do
     l <- param "line"
     liftIO $ appendFile db (mconcat [l, "\n"])
